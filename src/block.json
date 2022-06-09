@@ -19,10 +19,6 @@
 			"type": "array",
 			"selector": ".info-wrap"
 		},
-		"templates": {
-			"type": "array"
-
-		},
 		"style":{
 			"type": "string",
 			"default": "none"	
