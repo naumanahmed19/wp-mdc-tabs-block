@@ -22,8 +22,9 @@ import {
 	PanelColorSettings,
 	InnerBlocks,
 
-} from '@wordpress/block-editor';
 
+} from '@wordpress/block-editor';
+const { useDispatch, useSelect } = wp.data;
 import { registerBlockType } from '@wordpress/blocks';
 
 import {
@@ -66,10 +67,27 @@ export default function Edit({ attributes: { info = [], templates = [] }, setAtt
 	const [tabCounter, setTabCounter] = useState(0);
 	const [activeTabIndex, setActiveTabIndex] = useState(0);
 	const [rerender, setRerender] = useState(false);
+
+
+	const { replaceInnerBlocks } = useDispatch("core/block-editor");
+	const { inner_blocks } = useSelect(select => ({
+		inner_blocks: select("core/block-editor").getBlocks(clientId)
+	}));
+
 	//  const MY_TEMPLATE = [['core/column',{},[['core/paragraph',{'placeholder':'Inhalt linke Spalte'}]]],['core/column',{},[['core/paragraph',{'placeholder':'Inhalt rechte Spalte'}]]]];
 
 
-
+	const toggleNone = (className) => {
+		let elements = document.getElementsByClassName(className)
+		console.log(elements)
+		for (let i = 0; i < elements.length; i++){
+		  if (elements[i].style.display === "none") {
+			elements[i].style.display = "";
+		  } else {
+			elements[i].style.display = "none";
+		  }
+		}
+	}
 
 	const handleAddTab = () => {
 		setTabCounter(tabCounter => tabCounter + 1);
@@ -81,7 +99,7 @@ export default function Edit({ attributes: { info = [], templates = [] }, setAtt
 				title: "",
 				description: "",
 			}],
-			templates: [...templates, ['brand/tab', { tabId, index: templates.length, className: 'brand-tab-screen' }, [
+			templates: [...templates, ['brand/tab', {'tabScreenIndex': templates.length, tabId, index: templates.length, className: 'brand-tab-screen'}, [
 				['core/paragraph', { placeholder: 'Enter side content... ' + tabId }],
 			]],]
 		});
@@ -90,8 +108,17 @@ export default function Edit({ attributes: { info = [], templates = [] }, setAtt
 
 
 	
-	const setActiveTab = (index) => {
-		setActiveTabIndex(index);
+	const setActiveTab = ( tabIndex, blocks = [...inner_blocks]) => {
+		setActiveTabIndex(tabIndex);
+		const inner_blocks_new = blocks.map((innerBlock,index) => {
+			let block = innerBlock;
+			block.attributes.style = {display:'none'}
+			if (tabIndex == index) {
+				block.attributes.style = {display:'block'}
+			}
+			return block;
+		});
+		replaceInnerBlocks(clientId, inner_blocks_new, false);
 	};
 
 
@@ -101,12 +128,6 @@ export default function Edit({ attributes: { info = [], templates = [] }, setAtt
 	 */
 
 	const handleRemoveTab = (tab) => {
-
-		/**
-		 * TODO: Find previous item by and set to active
-		 */
-		//setActiveTab(activeTabIndex => tabCounter - 1 )
-
 
 		const newTemplates = templates.filter(item => item[1].index != tab.index)
 		.map(i => {
@@ -122,7 +143,6 @@ export default function Edit({ attributes: { info = [], templates = [] }, setAtt
 			return i;
 		});
 		
-		
 		/**
 		 * update all state variables
 		 * 
@@ -132,17 +152,22 @@ export default function Edit({ attributes: { info = [], templates = [] }, setAtt
 			templates: newTemplates
 		});
 
-
 		/**
 		 * By default wordpress does not allow to update InnerBock compoment with new changes
 		 * To delete all iteam under a tab we have to find client id of tab and remove it using
 		 * dispatch method
 		 * 
 		 */
-		const currentBlock =  wp.data.select( 'core/block-editor' ).getBlocksByClientId(clientId)
-		const currentTabClientId =  currentBlock[0].innerBlocks[tab.index].clientId;
-		wp.data.dispatch( 'core/block-editor' ).removeBlocks( currentTabClientId );
+		let blocks = [...inner_blocks];
+		blocks.splice(tab.index, 1);
 
+		/**
+		 * Set active tab and update blocks
+		 * 
+		 */
+		const previousTabIndex = tab.index == 0 ? 0 :tab.index-1;   
+		setActiveTab( previousTabIndex,blocks)
+		
 	}
 
 
@@ -187,11 +212,11 @@ export default function Edit({ attributes: { info = [], templates = [] }, setAtt
 
 	const innberBockLayout = (value) => {
 
-			console.log('value tempal',value)
+			// console.log('value tempal',value)
 		return (
 		
 			<div>
-					{JSON.stringify(templates)}
+					{/* {JSON.stringify(templates)} */}
 
 
 				<InnerBlocks
