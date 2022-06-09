@@ -1,6 +1,6 @@
 /**
  * Retrieves the translation of text.
- * https://github.com/WordPress/gutenberg/issues/15893
+ * https://github.com/WordPress/gutenberg/issues/15893git remote add origin https://github.com/naumanahmed19/w-block-tabs.git
  *
  * @see https://developer.wordpress.org/block-editor/packages/packages-i18n/
  */
