@@ -45,6 +45,10 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
+const {
+  useDispatch,
+  useSelect
+} = wp.data;
 
 
 /**
@@ -77,7 +81,28 @@ function Edit(_ref) {
   } = _ref;
   const [tabCounter, setTabCounter] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(0);
   const [activeTabIndex, setActiveTabIndex] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(0);
-  const [rerender, setRerender] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(false); //  const MY_TEMPLATE = [['core/column',{},[['core/paragraph',{'placeholder':'Inhalt linke Spalte'}]]],['core/column',{},[['core/paragraph',{'placeholder':'Inhalt rechte Spalte'}]]]];
+  const [rerender, setRerender] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(false);
+  const {
+    replaceInnerBlocks
+  } = useDispatch("core/block-editor");
+  const {
+    inner_blocks
+  } = useSelect(select => ({
+    inner_blocks: select("core/block-editor").getBlocks(clientId)
+  })); //  const MY_TEMPLATE = [['core/column',{},[['core/paragraph',{'placeholder':'Inhalt linke Spalte'}]]],['core/column',{},[['core/paragraph',{'placeholder':'Inhalt rechte Spalte'}]]]];
+
+  const toggleNone = className => {
+    let elements = document.getElementsByClassName(className);
+    console.log(elements);
+
+    for (let i = 0; i < elements.length; i++) {
+      if (elements[i].style.display === "none") {
+        elements[i].style.display = "";
+      } else {
+        elements[i].style.display = "none";
+      }
+    }
+  };
 
   const handleAddTab = () => {
     setTabCounter(tabCounter => tabCounter + 1);
@@ -90,6 +115,7 @@ function Edit(_ref) {
         description: ""
       }],
       templates: [...templates, ['brand/tab', {
+        'tabScreenIndex': templates.length,
         tabId,
         index: templates.length,
         className: 'brand-tab-screen'
@@ -100,8 +126,24 @@ function Edit(_ref) {
     setActiveTab(tabCounter);
   };
 
-  const setActiveTab = index => {
-    setActiveTabIndex(index);
+  const setActiveTab = function (tabIndex) {
+    let blocks = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [...inner_blocks];
+    setActiveTabIndex(tabIndex);
+    const inner_blocks_new = blocks.map((innerBlock, index) => {
+      let block = innerBlock;
+      block.attributes.style = {
+        display: 'none'
+      };
+
+      if (tabIndex == index) {
+        block.attributes.style = {
+          display: 'block'
+        };
+      }
+
+      return block;
+    });
+    replaceInnerBlocks(clientId, inner_blocks_new, false);
   };
   /**
    * Action to remove a tab
@@ -110,10 +152,6 @@ function Edit(_ref) {
 
 
   const handleRemoveTab = tab => {
-    /**
-     * TODO: Find previous item by and set to active
-     */
-    //setActiveTab(activeTabIndex => tabCounter - 1 )
     const newTemplates = templates.filter(item => item[1].index != tab.index).map(i => {
       if (i[1].index > tab.index) {
         i[1].index -= 1;
@@ -144,9 +182,15 @@ function Edit(_ref) {
      * 
      */
 
-    const currentBlock = wp.data.select('core/block-editor').getBlocksByClientId(clientId);
-    const currentTabClientId = currentBlock[0].innerBlocks[tab.index].clientId;
-    wp.data.dispatch('core/block-editor').removeBlocks(currentTabClientId);
+    let blocks = [...inner_blocks];
+    blocks.splice(tab.index, 1);
+    /**
+     * Set active tab and update blocks
+     * 
+     */
+
+    const previousTabIndex = tab.index == 0 ? 0 : tab.index - 1;
+    setActiveTab(previousTabIndex, blocks);
   };
 
   const tabs = value => {
@@ -177,8 +221,8 @@ function Edit(_ref) {
   };
 
   const innberBockLayout = value => {
-    console.log('value tempal', value);
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", null, JSON.stringify(templates), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_4__.InnerBlocks, {
+    // console.log('value tempal',value)
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_4__.InnerBlocks, {
       template: templates,
       onChange: title => {
         console.log(title, 'change inner block...');
