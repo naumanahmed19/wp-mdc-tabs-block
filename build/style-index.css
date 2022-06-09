@@ -1,0 +1,43 @@
+/*!***************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[3].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[3].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[3].use[3]!./src/style.scss ***!
+  \***************************************************************************************************************************************************************************************************************************************/
+/**
+ * The following styles get applied both on the front of your site
+ * and in the editor.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+.wp-block-create-block-todo-list {
+  background-color: #21759b;
+  color: #fff;
+  padding: 2px;
+}
+
+.zozo {
+  display: none;
+}
+
+.tabs {
+  list-style: none;
+}
+
+.tabs li {
+  display: inline-block;
+}
+
+.tabs li a {
+  color: black;
+  float: left;
+  display: block;
+  margin-left: -1px;
+  position: relative;
+  left: 1px;
+  background: white;
+  text-decoration: none;
+}
+
+.tabs li a:hover {
+  background: #ccc;
+}
+
+/*# sourceMappingURL=style-index.css.map*/
