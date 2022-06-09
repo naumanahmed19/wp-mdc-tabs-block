@@ -121,84 +121,27 @@ export default function Edit({ attributes: { info = [], templates = [] }, setAtt
 			}
 			return i;
 		});
-	
-
-		console.log('new templates ....', newTemplates)
-
-	
+		
+		
+		/**
+		 * update all state variables
+		 * 
+		 */
 		 setAttributes({
 			info:newTabs,
 			templates: newTemplates
 		});
 
 
-	
-	
-
-			console.log(wp.data.select( 'core/editor'),'test');
-		const currentBlock =  wp.data.select( 'core/block-editor' ).getBlocksByClientId
-		console.log(wp.data.select( 'core/block-editor' ).getBlocks());
-		const childBlocks = currentBlock.innerBlocks;
-
-	
-
-
-		var index = wp.data.select('core/editor').getBlocks().map(function(block) { return block.clientId == clientId; }).indexOf(true) + 1;
-
-			console.log(index,'found')
-
-
-
-		wp.data.dispatch( 'core/block-editor' ).removeBlocks( clientId );
-
-
-		// wp.data.dispatch( 'brand/editor' ).resetBlocks( wp.blocks.parse( 'My content' ) );
-
-		// console.log(wp.data.select( 'core/block-editor' ).getBlocks(),'after remove');
-
-		// console.log('should be update',info,templates)
-
-
-
-		console.log('after ....')
-
-	
-
-		// setAttributes(({ templates}) =>
-
-		// 	templates.filter(item => item[1].tab !== infoItem.index)
-		// );
-
-
-		// let tempx = templates.filter(item => item[1].tab !== infoItem.index)
-		// console.log(tempx);
-
-
-		// setTabCounter(tabCounter => tabCounter - 1);
-
-		// 	 console.log(infoItem.index,template);
-		// //	 setTemplate([])
-		// 	 setTemplate({ template: tempx })
-
-		//  console.log(template);
-
-		//  let allTemplates = [...template];
-		//  newTemplates = allTemplates.splice(infoItem.index, 1)
-		//  setTemplate(allTemplates);
-
-
-		//example
-		//  console.log('before remove')
-		// let array = template
-		// let newArray = array.splice(infoItem.index, 1)
-		// console.log(array, newArray)
-		// console.log('after remove')
-		// setTemplate(array);
-
-		//   console.log('afterset template remove')
-		//  console.log(template,template.slice(template.indexOf((infoItem.index), 1)));
-		//  	console.log(template,template.splice(template.indexOf((infoItem.index), 1)));
-		//  setTemplate());
+		/**
+		 * By default wordpress does not allow to update InnerBock compoment with new changes
+		 * To delete all iteam under a tab we have to find client id of tab and remove it using
+		 * dispatch method
+		 * 
+		 */
+		const currentBlock =  wp.data.select( 'core/block-editor' ).getBlocksByClientId(clientId)
+		const currentTabClientId =  currentBlock[0].innerBlocks[tab.index].clientId;
+		wp.data.dispatch( 'core/block-editor' ).removeBlocks( currentTabClientId );
 
 	}
 
@@ -214,7 +157,6 @@ export default function Edit({ attributes: { info = [], templates = [] }, setAtt
 								className="info-item-title"
 								placeholder={`Tab ${infoItem.tabId} title`}
 								value={infoItem.title}
-
 
 								onChange={title => {
 									const newObject = Object.assign({}, infoItem, {

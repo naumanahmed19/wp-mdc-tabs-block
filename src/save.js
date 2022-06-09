@@ -37,6 +37,7 @@ import { __ } from '@wordpress/i18n';
 	
 
 	const displayInfoList = (value) => {
+		console.log(attributes)
 		return(
 			value.map( infoItem => {
 				return(
