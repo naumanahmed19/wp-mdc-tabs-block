@@ -50,6 +50,9 @@ const {
   useSelect
 } = wp.data;
 
+const {
+  createBlock
+} = wp.blocks;
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -79,6 +82,7 @@ function Edit(_ref) {
     className,
     clientId
   } = _ref;
+  const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_4__.useBlockProps)();
   const [tabCounter, setTabCounter] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(0);
   const [activeTabIndex, setActiveTabIndex] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(0);
   const [rerender, setRerender] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(false);
@@ -113,17 +117,26 @@ function Edit(_ref) {
         index: info.length,
         title: "",
         description: ""
-      }],
-      templates: [...templates, ['brand/tab', {
-        'tabScreenIndex': templates.length,
-        tabId,
-        index: templates.length,
-        className: 'brand-tab-screen'
-      }, [['core/paragraph', {
-        placeholder: 'Enter side content... ' + tabId
-      }]]]]
+      }] // templates: [...templates, ['brand/tab', {'tabScreenIndex': templates.length, tabId, index: templates.length, className: 'brand-tab-screen'}, [
+      // 	['core/paragraph', { placeholder: 'Add tab content' }],
+      // ]],]
+
     });
-    setActiveTab(tabCounter);
+    let attributes = {
+      'tabScreenIndex': info.length,
+      tabId,
+      index: info.length,
+      className: 'brand-tab-screen'
+    }; //let innerBlocks =[ ['core/paragraph', { placeholder: 'Add tab content' }]];
+
+    let blocks = [...inner_blocks, ...[createBlock('brand/tab', attributes, [createBlock('core/paragraph')])]];
+    console.log(blocks); // let newBlock =  ['brand/tab', {'tabScreenIndex': info.length, tabId, index: info.length, className: 'brand-tab-screen'}, [
+    // 	['core/paragraph', { placeholder: 'Add tab content' }],
+    // ]];
+    // let blocks = [...inner_blocks,...newBlock];
+    // console.log(blocks)
+
+    setActiveTab(tabCounter, blocks);
   };
 
   const setActiveTab = function (tabIndex) {
@@ -194,7 +207,7 @@ function Edit(_ref) {
   };
 
   const tabs = value => {
-    return value.map(infoItem => {
+    return value.sort((a, b) => a.index - b.index).map(infoItem => {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("li", {
         className: "tab"
       }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("span", {
@@ -202,7 +215,7 @@ function Edit(_ref) {
       }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_4__.RichText, {
         tagName: "span",
         className: "info-item-title",
-        placeholder: `Tab ${infoItem.tabId} title`,
+        placeholder: `Tab title`,
         value: infoItem.title,
         onChange: title => {
           const newObject = Object.assign({}, infoItem, {
@@ -220,27 +233,12 @@ function Edit(_ref) {
     });
   };
 
-  const innberBockLayout = value => {
-    // console.log('value tempal',value)
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_4__.InnerBlocks, {
-      template: templates,
-      onChange: title => {
-        console.log(title, 'change inner block...');
-        const newObject = Object.assign({}, infoItem, {
-          title: title
-        });
-        setAttributes({
-          info: [...info.filter(item => item.index != infoItem.index), newObject]
-        });
-      },
-      __experimentalCaptureToolbars: true,
-      templateLock: "all"
-    }));
-  };
-
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", (0,_babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_4__.useBlockProps)(), {
+  (0,react__WEBPACK_IMPORTED_MODULE_3__.useEffect)(() => {//setActiveTab(0)
+    // setActiveTab(tabCounter,blocks)
+  });
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", (0,_babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, blockProps, {
     className: "tab-wrap"
-  }), "Total : ", tabCounter, " , Active Tab: ", activeTabIndex, " ,, --------", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
+  }), "Total : ", tabCounter, " , Active Tab: ", activeTabIndex, " ,,", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
     className: className
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("ul", {
     className: "tabs"
@@ -248,7 +246,9 @@ function Edit(_ref) {
     onClick: handleAddTab
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("span", {
     class: "dashicons dashicons-plus"
-  }), " Add Tab")), innberBockLayout(templates)));
+  }), " Add Tab")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_4__.InnerBlocks, {
+    templateLock: "all"
+  })));
 }
 
 /***/ }),
@@ -369,8 +369,9 @@ function save(_ref) {
 
   const displayInfoList = value => {
     console.log(attributes);
-    return value.map(infoItem => {
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InnerBlocks.Content, null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    const blockProps = _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps.save();
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", blockProps, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InnerBlocks.Content, null), value.map(infoItem => {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "info-item"
       }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.RichText.Content, {
         tagName: "h4",
@@ -379,8 +380,8 @@ function save(_ref) {
         style: {
           height: 58
         }
-      })));
-    });
+      }));
+    }));
   };
 
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -511,7 +512,7 @@ function _extends() {
   \************************/
 /***/ (function(module) {
 
-module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":2,"name":"brand/tabs","version":"0.1.0","title":"Brand Tabs","category":"brand","icon":"layout","description":"Example static block scaffolded with Create Block tool.","supports":{"html":false},"textdomain":"todo-list","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","attributes":{"info":{"type":"array","selector":".info-wrap"},"templates":{"type":"array"},"style":{"type":"string","default":"none"}}}');
+module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":2,"name":"brand/tabs","version":"0.1.0","title":"Brand Tabs","category":"brand","icon":"layout","description":"Example static block scaffolded with Create Block tool.","supports":{"html":false},"textdomain":"todo-list","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","attributes":{"info":{"type":"array","selector":".info-wrap"},"style":{"type":"string","default":"none"}}}');
 
 /***/ })
 

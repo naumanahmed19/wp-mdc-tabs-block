@@ -26,13 +26,14 @@ import {
 } from '@wordpress/block-editor';
 const { useDispatch, useSelect } = wp.data;
 import { registerBlockType } from '@wordpress/blocks';
-
+const { createBlock } = wp.blocks;
 import {
 	TextControl,
 	PanelBody,
 	PanelRow,
 	ToggleControl,
 	ExternalLink,
+	PlainText
 
 } from '@wordpress/components';
 
@@ -63,7 +64,8 @@ import {
  */
 export default function Edit({ attributes: { info = [], templates = [] }, setAttributes, className ,clientId}) {
 
-
+	const blockProps = useBlockProps();
+ 
 	const [tabCounter, setTabCounter] = useState(0);
 	const [activeTabIndex, setActiveTabIndex] = useState(0);
 	const [rerender, setRerender] = useState(false);
@@ -73,6 +75,8 @@ export default function Edit({ attributes: { info = [], templates = [] }, setAtt
 	const { inner_blocks } = useSelect(select => ({
 		inner_blocks: select("core/block-editor").getBlocks(clientId)
 	}));
+
+	
 
 	//  const MY_TEMPLATE = [['core/column',{},[['core/paragraph',{'placeholder':'Inhalt linke Spalte'}]]],['core/column',{},[['core/paragraph',{'placeholder':'Inhalt rechte Spalte'}]]]];
 
@@ -99,11 +103,28 @@ export default function Edit({ attributes: { info = [], templates = [] }, setAtt
 				title: "",
 				description: "",
 			}],
-			templates: [...templates, ['brand/tab', {'tabScreenIndex': templates.length, tabId, index: templates.length, className: 'brand-tab-screen'}, [
-				['core/paragraph', { placeholder: 'Enter side content... ' + tabId }],
-			]],]
+			// templates: [...templates, ['brand/tab', {'tabScreenIndex': templates.length, tabId, index: templates.length, className: 'brand-tab-screen'}, [
+			// 	['core/paragraph', { placeholder: 'Add tab content' }],
+			// ]],]
 		});
-		setActiveTab(tabCounter)
+
+
+
+		let attributes =  {'tabScreenIndex': info.length, tabId, index: info.length, className: 'brand-tab-screen'};
+
+
+		//let innerBlocks =[ ['core/paragraph', { placeholder: 'Add tab content' }]];
+	
+
+		let blocks = [...inner_blocks,...[createBlock ('brand/tab',attributes,[createBlock ('core/paragraph')]) ]];
+				console.log(blocks)
+		// let newBlock =  ['brand/tab', {'tabScreenIndex': info.length, tabId, index: info.length, className: 'brand-tab-screen'}, [
+		// 	['core/paragraph', { placeholder: 'Add tab content' }],
+		// ]];
+
+		// let blocks = [...inner_blocks,...newBlock];
+		// console.log(blocks)
+		setActiveTab(tabCounter,blocks)
 	};
 
 
@@ -118,6 +139,8 @@ export default function Edit({ attributes: { info = [], templates = [] }, setAtt
 			}
 			return block;
 		});
+
+		
 		replaceInnerBlocks(clientId, inner_blocks_new, false);
 	};
 
@@ -173,16 +196,15 @@ export default function Edit({ attributes: { info = [], templates = [] }, setAtt
 
 	const tabs = (value) => {
 		return (
-			value.map(infoItem => {
+			value.sort((a, b) => a.index - b.index).map(infoItem => {
 				return (
 					<li className='tab' >
 						<span onClick={(e) => setActiveTab(infoItem.index)}>
-							<RichText
+						 <RichText
 								tagName="span"
 								className="info-item-title"
-								placeholder={`Tab ${infoItem.tabId} title`}
+								placeholder={`Tab title`}
 								value={infoItem.title}
-
 								onChange={title => {
 									const newObject = Object.assign({}, infoItem, {
 										title: title
@@ -194,7 +216,7 @@ export default function Edit({ attributes: { info = [], templates = [] }, setAtt
 									});
 
 								}}
-							/>
+							/> 
 						</span>
 
 						<Button
@@ -208,57 +230,18 @@ export default function Edit({ attributes: { info = [], templates = [] }, setAtt
 			})
 		)
 	}
+	useEffect(() => {
+		//setActiveTab(0)
 
 
-	const innberBockLayout = (value) => {
-
-			// console.log('value tempal',value)
-		return (
 		
-			<div>
-					{/* {JSON.stringify(templates)} */}
 
-
-				<InnerBlocks
-				template={templates}
-				
-				onChange={title => {
-					console.log(title,'change inner block...')
-					const newObject = Object.assign({}, infoItem, {
-						title: title
-					});
-					setAttributes({
-						info: [...info.filter(
-							item => item.index != infoItem.index
-						), newObject]
-					});
-
-				}}
-				__experimentalCaptureToolbars={true}
-				templateLock="all" />
-			
-		
-			</div>
-		)
-	}
-
-	
+		// setActiveTab(tabCounter,blocks)
+	  });
 
 	return (
-		
-		<div  { ...useBlockProps() } className="tab-wrap" >
+		<div  { ...blockProps } className="tab-wrap" >
 			Total : {tabCounter} , Active Tab: {activeTabIndex} ,,
-			--------
-
-			{/* {
-				useEffect(() => {
-					console.log("count2 changed!",templates);
-					setRerender(!rerender);
-				  }, [templates])
-			
-			}
-		 */}
-		
 			<div className={className}>
 				<ul className="tabs" >
 					{tabs(info)}
@@ -266,8 +249,7 @@ export default function Edit({ attributes: { info = [], templates = [] }, setAtt
 					<li onClick={handleAddTab}><span class="dashicons dashicons-plus"></span> Add Tab</li>
 				</ul>
 
-				{innberBockLayout(templates)}
-				
+				<InnerBlocks templateLock="all" />
 			</div>
 		</div>
 	);

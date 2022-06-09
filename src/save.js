@@ -38,23 +38,31 @@ import { __ } from '@wordpress/i18n';
 
 	const displayInfoList = (value) => {
 		console.log(attributes)
+		const blockProps = useBlockProps.save();
 		return(
-			value.map( infoItem => {
-				return(
-					<div>
-						<InnerBlocks.Content />
-						<div className="info-item">
-							<RichText.Content
-								tagName="h4"
-								className="info-item-title"
-								value={infoItem.title}
-								style={{ height: 58 }}
-							/>
-						</div>
-					</div>
-				
-				)
-			} )
+			<div { ...blockProps }>
+
+						  <InnerBlocks.Content />
+
+			{
+					value.map( infoItem => {
+						return(
+						
+								<div className="info-item">
+									<RichText.Content
+										tagName="h4"
+										className="info-item-title"
+										value={infoItem.title}
+										style={{ height: 58 }}
+									/>
+								</div>
+					
+						
+						)
+					} )
+			}
+			</div>
+		
 		)
 	}
 
