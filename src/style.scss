@@ -5,19 +5,12 @@
  * Replace them with your own styles or remove the file completely.
  */
 
-.wp-block-create-block-todo-list {
-	background-color: #21759b;
-	color: #fff;
-	padding: 2px;
-}
-
-
-.zozo{
-	display: none;
-}
-
-
-.tabs { list-style: none; }
-.tabs li { display: inline-block; }
-.tabs li a { color: black; float: left; display: block;  margin-left: -1px; position: relative; left: 1px; background: white; text-decoration: none; }
-.tabs li a:hover { background: #ccc; }
+ @use "@material/theme" with (
+	$primary: #000,
+	$secondary: #76ff03,
+	$background: #fff,
+  );
+ @use "@material/tab-bar/mdc-tab-bar";
+ @use "@material/tab-scroller/mdc-tab-scroller";
+ @use "@material/tab-indicator/mdc-tab-indicator";
+ @use "@material/tab/mdc-tab";

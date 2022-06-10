@@ -15,9 +15,14 @@
 	"editorStyle": "file:./index.css",
 	"style": "file:./style-index.css",
 	"attributes": {
+		"content": {
+			"type": "string",
+			"source": "html",
+			"selector": "div"
+		},
 		"info": {
 			"type": "array",
-			"selector": ".info-wrap"
+			"selector": "div"
 		},
 		"style":{
 			"type": "string",

@@ -37,6 +37,9 @@ import {
 
 } from '@wordpress/components';
 
+import { MDCTabBar } from '@material/tab-bar';
+
+
 
 
 /**
@@ -62,10 +65,10 @@ import {
  *
  * @return {WPElement} Element to render.
  */
-export default function Edit({ attributes: { info = [], templates = [] }, setAttributes, className ,clientId}) {
+export default function Edit({ attributes: { info = [], templates = [] }, setAttributes, className, clientId }) {
 
 	const blockProps = useBlockProps();
- 
+
 	const [tabCounter, setTabCounter] = useState(0);
 	const [activeTabIndex, setActiveTabIndex] = useState(0);
 	const [rerender, setRerender] = useState(false);
@@ -76,7 +79,7 @@ export default function Edit({ attributes: { info = [], templates = [] }, setAtt
 		inner_blocks: select("core/block-editor").getBlocks(clientId)
 	}));
 
-	
+
 
 	//  const MY_TEMPLATE = [['core/column',{},[['core/paragraph',{'placeholder':'Inhalt linke Spalte'}]]],['core/column',{},[['core/paragraph',{'placeholder':'Inhalt rechte Spalte'}]]]];
 
@@ -84,24 +87,24 @@ export default function Edit({ attributes: { info = [], templates = [] }, setAtt
 	const toggleNone = (className) => {
 		let elements = document.getElementsByClassName(className)
 		console.log(elements)
-		for (let i = 0; i < elements.length; i++){
-		  if (elements[i].style.display === "none") {
-			elements[i].style.display = "";
-		  } else {
-			elements[i].style.display = "none";
-		  }
+		for (let i = 0; i < elements.length; i++) {
+			if (elements[i].style.display === "none") {
+				elements[i].style.display = "";
+			} else {
+				elements[i].style.display = "none";
+			}
 		}
 	}
 
 	const handleAddTab = () => {
 		setTabCounter(tabCounter => tabCounter + 1);
-		let tabId =  `tab${tabCounter}`;
+		let tabId = `tab${tabCounter}`;
 		setAttributes({
 			info: [...info, {
 				tabId,
 				index: info.length,
-				title: "",
-				description: "",
+				title:'Tab title',
+				description: '',
 			}],
 			// templates: [...templates, ['brand/tab', {'tabScreenIndex': templates.length, tabId, index: templates.length, className: 'brand-tab-screen'}, [
 			// 	['core/paragraph', { placeholder: 'Add tab content' }],
@@ -110,37 +113,37 @@ export default function Edit({ attributes: { info = [], templates = [] }, setAtt
 
 
 
-		let attributes =  {'tabScreenIndex': info.length, tabId, index: info.length, className: 'brand-tab-screen'};
+		let attr = { 'tabScreenIndex': info.length, tabId, index: info.length, className: 'brand-tab-screen' };
 
 
 		//let innerBlocks =[ ['core/paragraph', { placeholder: 'Add tab content' }]];
-	
 
-		let blocks = [...inner_blocks,...[createBlock ('brand/tab',attributes,[createBlock ('core/paragraph')]) ]];
-				console.log(blocks)
+
+		let blocks = [...inner_blocks, ...[createBlock('brand/tab', attr, [createBlock('core/paragraph')])]];
+		console.log(blocks)
 		// let newBlock =  ['brand/tab', {'tabScreenIndex': info.length, tabId, index: info.length, className: 'brand-tab-screen'}, [
 		// 	['core/paragraph', { placeholder: 'Add tab content' }],
 		// ]];
 
 		// let blocks = [...inner_blocks,...newBlock];
 		// console.log(blocks)
-		setActiveTab(tabCounter,blocks)
+		setActiveTab(tabCounter, blocks)
 	};
 
 
-	
-	const setActiveTab = ( tabIndex, blocks = [...inner_blocks]) => {
+
+	const setActiveTab = (tabIndex, blocks = [...inner_blocks]) => {
 		setActiveTabIndex(tabIndex);
-		const inner_blocks_new = blocks.map((innerBlock,index) => {
+		const inner_blocks_new = blocks.map((innerBlock, index) => {
 			let block = innerBlock;
-			block.attributes.style = {display:'none'}
+			block.attributes.style = { display: 'none' }
 			if (tabIndex == index) {
-				block.attributes.style = {display:'block'}
+				block.attributes.style = { display: 'block' }
 			}
 			return block;
 		});
 
-		
+
 		replaceInnerBlocks(clientId, inner_blocks_new, false);
 	};
 
@@ -153,25 +156,25 @@ export default function Edit({ attributes: { info = [], templates = [] }, setAtt
 	const handleRemoveTab = (tab) => {
 
 		const newTemplates = templates.filter(item => item[1].index != tab.index)
-		.map(i => {
-			if (i[1].index > tab.index) {
-				i[1].index -= 1;
-			}
-			return i;
-		});
+			.map(i => {
+				if (i[1].index > tab.index) {
+					i[1].index -= 1;
+				}
+				return i;
+			});
 		const newTabs = info.filter(item => item.index != tab.index).map(i => {
 			if (i.index > tab.index) {
 				i.index -= 1;
 			}
 			return i;
 		});
-		
+
 		/**
 		 * update all state variables
 		 * 
 		 */
-		 setAttributes({
-			info:newTabs,
+		setAttributes({
+			info: newTabs,
 			templates: newTemplates
 		});
 
@@ -188,67 +191,94 @@ export default function Edit({ attributes: { info = [], templates = [] }, setAtt
 		 * Set active tab and update blocks
 		 * 
 		 */
-		const previousTabIndex = tab.index == 0 ? 0 :tab.index-1;   
-		setActiveTab( previousTabIndex,blocks)
-		
+		const previousTabIndex = tab.index == 0 ? 0 : tab.index - 1;
+		setActiveTab(previousTabIndex, blocks)
+
 	}
 
 
 	const tabs = (value) => {
 		return (
-			value.sort((a, b) => a.index - b.index).map(infoItem => {
+			value.sort((a, b) => a.index - b.index).map(tab => {
 				return (
-					<li className='tab' >
-						<span onClick={(e) => setActiveTab(infoItem.index)}>
-						 <RichText
-								tagName="span"
-								className="info-item-title"
-								placeholder={`Tab title`}
-								value={infoItem.title}
-								onChange={title => {
-									const newObject = Object.assign({}, infoItem, {
-										title: title
-									});
-									setAttributes({
-										info: [...info.filter(
-											item => item.index != infoItem.index
-										), newObject]
-									});
 
-								}}
-							/> 
-						</span>
 
-						<Button
+			
+
+							<div className="mdc-tab mdc-tab--active" role="tab" aria-selected="true" tabindex={tab.index} 	onClick={() => setActiveTab(tab.index)}>
+								<span className="mdc-tab__content">
+									{/* <span className="mdc-tab__icon material-icons" aria-hidden="true">favorite</span>
+								 */}
+										<RichText
+											tagName="span"
+											className="mdc-tab__text-label"
+											placeholder={`Tab title`}
+											value={tab.title}
+											onChange={title => {
+												const newObject = Object.assign({}, tab, {
+													title: title
+												});
+												setAttributes({
+													info: [...info.filter(
+														item => item.index != tab.index
+													), newObject]
+												});
+
+											}}
+										/>
+									
+								</span>
+								
+								<span className={tab.index == activeTabIndex ? 'mdc-tab-indicator mdc-tab-indicator--active': 'mdc-tab-indicator'}>
+									<span className="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+								</span>
+								<span className="mdc-tab__ripplex"></span>
+								
+								
+						{/* <Button
 							variant='primary'
 							className="remove-item"
 							onClick={() => handleRemoveTab(infoItem)}
-						>&times;</Button>
+						>&times;</Button> */}
+							</div>
 
-					</li>
+			
+
+
+				
+
+
 				)
 			})
 		)
 	}
+
 	useEffect(() => {
-		//setActiveTab(0)
-
-
-		
-
-		// setActiveTab(tabCounter,blocks)
-	  });
+		new MDCTabBar(document.querySelector('.mdc-tab-bar'));
+		setActiveTab(0)
+	},[]);
 
 	return (
-		<div  { ...blockProps } className="tab-wrap" >
-			Total : {tabCounter} , Active Tab: {activeTabIndex} ,,
+		<div  {...blockProps} className="tab-wrap" >
 			<div className={className}>
-				<ul className="tabs" >
-					{tabs(info)}
-
-					<li onClick={handleAddTab}><span class="dashicons dashicons-plus"></span> Add Tab</li>
-				</ul>
-
+				<div className="mdc-tab-bar" role="tablist">
+					<div className="mdc-tab-scroller">
+						<div className="mdc-tab-scroller__scroll-area">
+							<div className="mdc-tab-scroller__scroll-content">
+								{tabs(info)}
+							<div className="mdc-tab mdc-tab--active" role="tab" aria-selected="true"  onClick={handleAddTab}>
+								<span className="mdc-tab__content">
+									<span className="mdc-tab__icon material-icons" aria-hidden="true">add</span>
+								</span>
+								<span className="mdc-tab-indicator">
+									<span className="mdc-tab-indicator__content"></span>
+								</span>
+								<span className="mdc-tab__ripple"></span>
+							</div>
+							</div>
+						</div>
+					</div>
+				</div>
 				<InnerBlocks templateLock="all" />
 			</div>
 		</div>

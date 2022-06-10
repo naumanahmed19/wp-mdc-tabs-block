@@ -21,7 +21,8 @@
  import save from './save';
  import metadata from './block.json';
  
- 
+ import { MDCTabBar } from '@material/tab-bar';
+
  
  // Importing code libraries for this block
  import { __ } from '@wordpress/i18n';

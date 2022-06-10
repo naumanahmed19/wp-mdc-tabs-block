@@ -35,44 +35,111 @@ import { __ } from '@wordpress/i18n';
  export default function save( { attributes ,className } ) {
 	const info = attributes.info;
 	
+let activeTabIndex = 0;
+	// useEffect(() => {
+	// 	new MDCTabBar(document.querySelector('.mdc-tab-bar'));
+	// 	setActiveTab(0)
+	// },[]);
+	const tabs = (tabs) => {
+		return (
+			tabs.sort((a, b) => a.index - b.index).map(tab => {
+				return (
 
-	const displayInfoList = (value) => {
-		console.log(attributes)
-		const blockProps = useBlockProps.save();
-		return(
-			<div { ...blockProps }>
 
-						  <InnerBlocks.Content />
+			
 
-			{
-					value.map( infoItem => {
-						return(
-						
-								<div className="info-item">
+							<div className="mdc-tab mdc-tab--active" role="tab" aria-selected="true" tabindex={tab.index} 	>
+								<span className="mdc-tab__content">
 									<RichText.Content
-										tagName="h4"
-										className="info-item-title"
-										value={infoItem.title}
-										style={{ height: 58 }}
+											tagName="span"
+											className="mdc-tab__text-label"
+										value={tab.title}
 									/>
-								</div>
-					
-						
-						)
-					} )
-			}
-			</div>
-		
+								</span>
+								<span className={tab.index == activeTabIndex ? 'mdc-tab-indicator mdc-tab-indicator--active': 'mdc-tab-indicator'}>
+									<span className="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+								</span>
+								<span className="mdc-tab__ripple"></span>
+							</div>
+
+			
+
+
+				
+
+
+				)
+			})
 		)
 	}
 
-	return(
 	
-			 <div className={className}>
-				<div className="info-wrap">{ displayInfoList(info) }</div>
-			</div>
-		
+	// const displayInfoList = (value) => {
+	// 	console.log(attributes)
+	// 	const blockProps = useBlockProps.save();
+	// 	return(
+	// 		<div { ...blockProps }>
 
+	// 		<div className="tab-wrap" >
+	// 					<div className={className}>
+	// 						<div className="mdc-tab-bar" role="tablist">
+	// 							<div className="mdc-tab-scroller">
+	// 								<div className="mdc-tab-scroller__scroll-area">
+	// 									<div className="mdc-tab-scroller__scroll-content">
+	// 										{tabs(info)}
+										
+	// 									</div>
+	// 								</div>
+	// 							</div>
+	// 						</div>
+	// 						<InnerBlocks.Content />
+
+	// 					</div>
+	// 				</div>
+
+						
+	// 		{
+	// 				value.map( infoItem => {
+	// 					return(
+						
+	// 							<div className="info-item">
+	// 								<RichText.Content
+	// 									tagName="h4"
+	// 									className="info-item-title"
+	// 									value={infoItem.title}
+	// 									style={{ height: 58 }}
+	// 								/>
+	// 							</div>
+					
+						
+	// 					)
+	// 				} )
+	// 		}
+	// 		</div>
+		
+	// 	)
+	// }
+
+	const blockProps = useBlockProps.save();
+
+
+	return(
+		<div  {...blockProps} className="tab-wrap" >
+			<div className={className}>
+				<div className="mdc-tab-bar" role="tablist">
+					<div className="mdc-tab-scroller">
+						<div className="mdc-tab-scroller__scroll-area">
+							<div className="mdc-tab-scroller__scroll-content">
+								{tabs(attributes.info)}
+										
+							
+							</div>
+						</div>
+					</div>
+				</div>
+				<InnerBlocks.Content />
+			</div>
+		</div>
 	
 	);
 }
