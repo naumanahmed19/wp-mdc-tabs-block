@@ -11,9 +11,9 @@
     "html": false
   },
   "parent": [
-    "brand/tabs"
+    "mdc/tabs"
   ],
-  "textdomain": "todo-list",
+  "textdomain": "mdc-tabs",
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",

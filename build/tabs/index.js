@@ -5291,7 +5291,7 @@ const {
 
 
 
-const ALLOWED_BLOCKS = wp.blocks.getBlockTypes().map(block => block.name).filter(blockName => blockName !== 'brand/tabs'); // 
+const ALLOWED_BLOCKS = wp.blocks.getBlockTypes().map(block => block.name).filter(blockName => blockName !== 'mdc/tabs'); // 
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -5344,7 +5344,7 @@ function Edit(_ref) {
       tabs: [...tabs, {
         tabId,
         index: tabs.length,
-        title: 'Tab title',
+        title: `Tab ${tabs.length} title`,
         description: ''
       }]
     });
@@ -5867,7 +5867,7 @@ function _extends() {
   \*****************************/
 /***/ (function(module) {
 
-module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":2,"name":"brand/tabs","version":"0.1.0","title":"Brand Tabs","category":"brand","icon":"layout","description":"Example static block scaffolded with Create Block tool.","supports":{"html":false},"textdomain":"todo-list","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","styles":[{"name":"default","label":"Default","isDefault":true},{"name":"other","label":"Other"}],"attributes":{"content":{"type":"string","source":"html","selector":"div"},"tabs":{"type":"array","selector":"div"},"style":{"type":"string","default":"none"}}}');
+module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":2,"name":"mdc/tabs","version":"0.1.0","title":"Tabs","category":"design","icon":"layout","description":"Example static block scaffolded with Create Block tool.","supports":{"html":false},"textdomain":"mdc-tabs","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","styles":[{"name":"default","label":"Default","isDefault":true},{"name":"other","label":"Other"}],"attributes":{"content":{"type":"string","source":"html","selector":"div"},"tabs":{"type":"array","selector":"div"},"style":{"type":"string","default":"none"}}}');
 
 /***/ })
 
@@ -6026,7 +6026,7 @@ module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
 /******/ 		
-/******/ 		var chunkLoadingGlobal = self["webpackChunktodo_list"] = self["webpackChunktodo_list"] || [];
+/******/ 		var chunkLoadingGlobal = self["webpackChunkmdc_tabs"] = self["webpackChunkmdc_tabs"] || [];
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	}();

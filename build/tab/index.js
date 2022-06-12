@@ -336,7 +336,7 @@ module.exports = window["wp"]["i18n"];
 /***/ (function(module) {
 
 "use strict";
-module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":2,"name":"brand/tab","version":"0.1.0","title":"Brand Tab","category":"brand","icon":"layout","description":"Example static block scaffolded with Create Block tool.","supports":{"html":false},"parent":["brand/tabs"],"textdomain":"todo-list","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","attributes":{"verticalAlignment":{"type":"string"},"width":{"type":"string"},"allowedBlocks":{"type":"array"},"templateLock":{"type":["string","boolean"],"enum":["all","insert",false]},"style":{"type":"string"},"tabId":{"type":"string"},"tabScreenIndex":{"type":"number"}}}');
+module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":2,"name":"brand/tab","version":"0.1.0","title":"Brand Tab","category":"brand","icon":"layout","description":"Example static block scaffolded with Create Block tool.","supports":{"html":false},"parent":["mdc/tabs"],"textdomain":"mdc-tabs","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","attributes":{"verticalAlignment":{"type":"string"},"width":{"type":"string"},"allowedBlocks":{"type":"array"},"templateLock":{"type":["string","boolean"],"enum":["all","insert",false]},"style":{"type":"string"},"tabId":{"type":"string"},"tabScreenIndex":{"type":"number"}}}');
 
 /***/ })
 

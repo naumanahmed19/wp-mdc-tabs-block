@@ -41,7 +41,7 @@ import { MDCTabBar } from '@material/tab-bar';
 import { MDCTabScroller } from '@material/tab-scroller';
 import { plus } from '@wordpress/icons';
 
-const ALLOWED_BLOCKS = wp.blocks.getBlockTypes().map(block => block.name).filter(blockName => blockName !== 'brand/tabs');
+const ALLOWED_BLOCKS = wp.blocks.getBlockTypes().map(block => block.name).filter(blockName => blockName !== 'mdc/tabs');
 // 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -91,7 +91,7 @@ export default function Edit({ attributes: { tabs = [], templates = [] }, setAtt
 			tabs: [...tabs, {
 				tabId,
 				index: tabs.length,
-				title: 'Tab title',
+				title: `Tab ${tabs.length} title`,
 				description: '',
 			}],
 		});

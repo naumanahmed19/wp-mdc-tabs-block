@@ -1,16 +1,16 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 2,
-  "name": "brand/tabs",
+  "name": "mdc/tabs",
   "version": "0.1.0",
-  "title": "Brand Tabs",
-  "category": "brand",
+  "title": "Tabs",
+  "category": "design",
   "icon": "layout",
   "description": "Example static block scaffolded with Create Block tool.",
   "supports": {
     "html": false
   },
-  "textdomain": "todo-list",
+  "textdomain": "mdc-tabs",
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
