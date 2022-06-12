@@ -2,7 +2,8 @@
 
 document.addEventListener("DOMContentLoaded", function() {
 
-
+    const ele = document.querySelector('.mdc-tab-bar')
+    if(!ele) return
 
     var tabBar = new mdc.tabBar.MDCTabBar(document.querySelector('.mdc-tab-bar'));
     var contentEls = document.querySelectorAll('.brand-tab-screen');
