@@ -1,0 +1,17 @@
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+.tab-wrap{
+	background: #fff;
+	border: 1px dotted #dad8d8;
+	.block-core-columns{
+		border: 1px dotted #dad8d8;
+	}
+	.mdc-tab-scroller{
+		border-bottom: 1px dotted #dad8d8;
+		display: flex;
+	}
+}
