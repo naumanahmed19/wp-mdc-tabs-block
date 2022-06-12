@@ -5256,11 +5256,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
 /* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _material_tab_bar__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @material/tab-bar */ "./node_modules/@material/tab-bar/component.js");
 /* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/plus.js");
-/* harmony import */ var _editor_scss__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./editor.scss */ "./src/tabs/editor.scss");
+/* harmony import */ var _editor_scss__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./editor.scss */ "./src/tabs/editor.scss");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__);
 
 
 
@@ -5287,7 +5287,6 @@ const {
 const {
   createBlock
 } = wp.blocks;
-
 
 
 
@@ -5465,7 +5464,7 @@ function Edit(_ref) {
         className: "mdc-tab-indicator__content mdc-tab-indicator__content--underline"
       })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("span", {
         className: "mdc-tab__ripplex"
-      }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Button, {
+      }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
         isSmall: true,
         className: "components-button block-editor-inserter__toggle has-icon",
         iconSize: 24,
@@ -5542,10 +5541,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _block_json__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./block.json */ "./src/tabs/block.json");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
-/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__);
 /**
  * Registers a new block provided a unique name and an object defining its behavior.
  *
@@ -5567,10 +5562,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
  // Importing code libraries for this block
-
-
 
 
 /**
@@ -5589,19 +5581,7 @@ __webpack_require__.r(__webpack_exports__);
    * @see ./save.js
    */
   save: _save__WEBPACK_IMPORTED_MODULE_3__["default"]
-}); //  window.onload = function() {
-//     console.log('testing..., bar',document.querySelector('.mdc-tab-bar'))
-//     var tabBar = new MDCTabBar(document.querySelector('.mdc-tab-bar'));
-//     console.log('tabbar',tabBar)
-//     var contentEls = document.querySelectorAll('.brand-tab-screen');
-//     contentEls[0].classList.add('brand-tab-screen--active');
-//     tabBar.listen('MDCTabBar:activated', function(event) {
-//     // Hide currently-active content
-//     document.querySelector('.brand-tab-screen--active').classList.remove('brand-tab-screen--active');
-//     // Show content for newly-activated tab
-//     contentEls[event.detail.index].classList.add('brand-tab-screen--active');
-//     });
-//  } ;
+});
 
 /***/ }),
 
@@ -5652,13 +5632,10 @@ __webpack_require__.r(__webpack_exports__);
 function save(_ref) {
   let {
     attributes,
-    className
+    className,
+    clientId
   } = _ref;
-  const tabs = attributes.tabs;
-  let activeTabIndex = 0; // useEffect(() => {
-  // 	new MDCTabBar(document.querySelector('.mdc-tab-bar'));
-  // 	setActiveTab(0)
-  // },[]);
+  let activeTabIndex = 0;
 
   const tabBar = tabs => {
     return tabs.sort((a, b) => a.index - b.index).map(tab => {
@@ -5681,49 +5658,14 @@ function save(_ref) {
         className: "mdc-tab__ripple"
       }));
     });
-  }; // const displaytabsList = (value) => {
-  // 	console.log(attributes)
-  // 	const blockProps = useBlockProps.save();
-  // 	return(
-  // 		<div { ...blockProps }>
-  // 		<div className="tab-wrap" >
-  // 					<div className={className}>
-  // 						<div className="mdc-tab-bar" role="tablist">
-  // 							<div className="mdc-tab-scroller">
-  // 								<div className="mdc-tab-scroller__scroll-area">
-  // 									<div className="mdc-tab-scroller__scroll-content">
-  // 										{tabs(tabs)}
-  // 									</div>
-  // 								</div>
-  // 							</div>
-  // 						</div>
-  // 						<InnerBlocks.Content />
-  // 					</div>
-  // 				</div>
-  // 		{
-  // 				value.map( tabsItem => {
-  // 					return(
-  // 							<div className="tabs-item">
-  // 								<RichText.Content
-  // 									tagName="h4"
-  // 									className="tabs-item-title"
-  // 									value={tabsItem.title}
-  // 									style={{ height: 58 }}
-  // 								/>
-  // 							</div>
-  // 					)
-  // 				} )
-  // 		}
-  // 		</div>
-  // 	)
-  // }
-
+  };
 
   const blockProps = _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.useBlockProps.save();
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", (0,_babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, blockProps, {
     className: "tab-wrap"
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
-    className: className
+    className: className,
+    id: clientId
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
     className: "mdc-tab-bar",
     role: "tablist"

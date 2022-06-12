@@ -15,27 +15,11 @@ import { useState, useEffect } from "react";
 import {
 	useBlockProps,
 	RichText,
-	AlignmentControl,
-	BlockControls,
-	BlockIcon,
-	InspectorControls,
-	PanelColorSettings,
 	InnerBlocks,
-
-
 } from '@wordpress/block-editor';
 const { useDispatch, useSelect } = wp.data;
 
 const { createBlock } = wp.blocks;
-import {
-	TextControl,
-	PanelBody,
-	PanelRow,
-	ToggleControl,
-	ExternalLink,
-	PlainText
-
-} from '@wordpress/components';
 
 import { MDCTabBar } from '@material/tab-bar';
 import { MDCTabScroller } from '@material/tab-scroller';
@@ -242,7 +226,7 @@ export default function Edit({ attributes: { tabs = [], templates = [] }, setAtt
 
 
 	return (
-		<div  {...blockProps} className="tab-wrap" >
+		<div  {...blockProps} className="tab-wrap">
 			<div className={className}>
 				<div className="mdc-tab-bar" role="tablist">
 					<div className="mdc-tab-scroller">
