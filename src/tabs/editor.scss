@@ -5,13 +5,31 @@
  */
 
 .tab-wrap{
-	background: #fff;
-	border: 1px dotted #dad8d8;
+
+	padding-bottom: 50px;
 	.block-core-columns{
 		border: 1px dotted #dad8d8;
+		padding-bottom: 50px;
 	}
 	.mdc-tab-scroller{
 		border-bottom: 1px dotted #dad8d8;
 		display: flex;
+	}
+}
+
+
+.brand-filter{
+	position: fixed;
+    left: 0px;
+    background: #fff;
+    width: auto;
+   
+    border: 1px solid #000;
+	.mdc-tab-scroller{
+		border-bottom: none;
+   		display: block;
+	}
+	.mdc-tab-scroller__scroll-content{
+		display: block;
 	}
 }

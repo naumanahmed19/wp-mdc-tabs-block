@@ -16,6 +16,8 @@ import {
 	useBlockProps,
 	RichText,
 	InnerBlocks,
+	InspectorControls ,
+
 } from '@wordpress/block-editor';
 const { useDispatch, useSelect } = wp.data;
 
@@ -39,6 +41,9 @@ import './editor.scss';
 import {
 	Placeholder,
 	Button,
+	ToggleControl ,
+	PanelBody,
+	TextControl
 } from "@wordpress/components";
 
 
@@ -50,12 +55,19 @@ import {
  *
  * @return {WPElement} Element to render.
  */
-export default function Edit({ attributes: { tabs = [], templates = [] }, setAttributes, className, clientId }) {
+export default function Edit(props) {
+
+
+	const { className, attributes, setAttributes,clientId ,context } = props;
+	const { tabs = [], templates = [], filterStyle,recordId } = attributes;
+
 
 	const blockProps = useBlockProps();
 
 	const [tabCounter, setTabCounter] = useState(0);
 	const [activeTabIndex, setActiveTabIndex] = useState(0);
+
+	const [payload,setPayload] = useState({value1:"dummy", value9:"dummy1"})
 
 	const { replaceInnerBlocks } = useDispatch("core/block-editor");
 	const { inner_blocks } = useSelect(select => ({
@@ -68,22 +80,24 @@ export default function Edit({ attributes: { tabs = [], templates = [] }, setAtt
 	 * Add a new tab on button click
 	 * 
 	 */
-	const handleAddTab = () => {
+	const handleAddTab =  () => {
 		setTabCounter(tabCounter => tabCounter + 1);
 		let tabId = `tab${tabCounter}`;
-		setAttributes({
-			tabs: [...tabs, {
-				tabId,
-				index: tabs.length,
-				title: `Tab ${tabs.length} title`,
-				description: '',
-			}],
+
+		let newTabs =  [...tabs, {
+			tabId,
+			index: tabs.length,
+			title: `Tab ${tabs.length} title`,
+			description: '',
+		}];
+		 setAttributes({
+			tabs:newTabs,
 		});
 
 		let attr = { 'tabScreenIndex': tabs.length, tabId, index: tabs.length, className: 'brand-tab-screen', };
 		let blocks = [...inner_blocks, ...[createBlock('brand/tab', attr,)]];
 
-		setActiveTab(tabs.length, blocks)
+		setActiveTab(tabs.length, blocks,newTabs)
 
 	};
 
@@ -94,8 +108,12 @@ export default function Edit({ attributes: { tabs = [], templates = [] }, setAtt
 	 * @param {number} tabIndex 
 	 * @param {array} blocks 
 	 */
-	const setActiveTab = (tabIndex, blocks = [...inner_blocks]) => {
+	const setActiveTab = (tabIndex, blocks = [...inner_blocks],newTabs = tabs) => {
 		setActiveTabIndex(tabIndex);
+
+
+
+		
 
 		//Scroll tab bar
 		let tab = new MDCTabBar(document.querySelector('.mdc-tab-bar'));
@@ -110,7 +128,17 @@ export default function Edit({ attributes: { tabs = [], templates = [] }, setAtt
 			return block;
 		});
 
+
+
+
 		replaceInnerBlocks(clientId, inner_blocks_new, false);
+
+		console.log('updateing.. ',tabIndex)
+		setTimeout(()=>{
+			console.log(newTabs[tabIndex])
+			setAttributes({activeTab : newTabs[tabIndex]})
+		},100)
+
 	};
 
 
@@ -121,13 +149,7 @@ export default function Edit({ attributes: { tabs = [], templates = [] }, setAtt
 
 	const handleRemoveTab = (tab) => {
 
-		const newTemplates = templates.filter(item => item[1].index != tab.index)
-			.map(i => {
-				if (i[1].index > tab.index) {
-					i[1].index -= 1;
-				}
-				return i;
-			});
+
 		const newTabs = tabs.filter(item => item.index != tab.index).map(i => {
 			if (i.index > tab.index) {
 				i.index -= 1;
@@ -141,7 +163,6 @@ export default function Edit({ attributes: { tabs = [], templates = [] }, setAtt
 		 */
 		setAttributes({
 			tabs: newTabs,
-			templates: newTemplates
 		});
 
 		/**
@@ -150,7 +171,7 @@ export default function Edit({ attributes: { tabs = [], templates = [] }, setAtt
 		 * dispatch method
 		 * 
 		 */
-		let blocks = [...inner_blocks];
+		let blocks = inner_blocks;
 		blocks.splice(tab.index, 1);
 
 		/**
@@ -158,7 +179,9 @@ export default function Edit({ attributes: { tabs = [], templates = [] }, setAtt
 		 * 
 		 */
 		const previousTabIndex = tab.index == 0 ? 0 : tab.index - 1;
-		setActiveTab(previousTabIndex, blocks)
+		setActiveTab(previousTabIndex, blocks,newTabs)
+
+	
 	}
 
 
@@ -213,26 +236,61 @@ export default function Edit({ attributes: { tabs = [], templates = [] }, setAtt
 		 * 
 		 */
 		new MDCTabBar(document.querySelector('.mdc-tab-bar'));
+	
 		setActiveTab(0)
-
 		/**
 		 * initialize atleaset one tab
 		 *  
 		 */
 		if (tabs.length == 0) {
+
+	
+		
+
 			handleAddTab()
+
+		
+		}else{
+			setTimeout(()=>{
+				setAttributes({activeTab : tabs[0]})
+			},100)
 		}
+
+
 	}, []);
 
-
+	let newTabValue =''
 	return (
 		<div  {...blockProps} className="tab-wrap">
+
+			<InspectorControls>
+
+
+
+
+				<PanelBody title="Settings" initialOpen={true}>
+					<ToggleControl
+						label="Tabbar filter style?"
+						help="Change thestyle of tabbar"
+						checked={filterStyle}
+						onChange={() => setAttributes({ filterStyle: !filterStyle })}
+					/>
+				</PanelBody>
+			</InspectorControls>
+
+
 			<div className={className}>
-				<div className="mdc-tab-bar" role="tablist">
+
+
+				<div className={filterStyle ? 'mdc-tab-bar brand-filter':'mdc-tab-bar'} role="tablist">
+				
 					<div className="mdc-tab-scroller">
 						<div className="mdc-tab-scroller__scroll-area">
 							<div className="mdc-tab-scroller__scroll-content">
-								{tabBar(tabs)}
+
+						  {tabBar(tabs) }
+							
+						
 							</div>
 						</div>
 						<div className="mdc-tab" role="tab" aria-selected="true" onClick={handleAddTab}>
@@ -247,6 +305,7 @@ export default function Edit({ attributes: { tabs = [], templates = [] }, setAtt
 							<span className="mdc-tab__ripple"></span>
 						</div>
 					</div>
+					
 				</div>
 				<InnerBlocks
 					allowedBlocks={ALLOWED_BLOCKS}

@@ -7,15 +7,30 @@
  * Replace them with your own styles or remove the file completely.
  */
 .tab-wrap {
-  background: #fff;
-  border: 1px dotted #dad8d8;
+  padding-bottom: 50px;
 }
 .tab-wrap .block-core-columns {
   border: 1px dotted #dad8d8;
+  padding-bottom: 50px;
 }
 .tab-wrap .mdc-tab-scroller {
   border-bottom: 1px dotted #dad8d8;
   display: flex;
+}
+
+.brand-filter {
+  position: fixed;
+  left: 0px;
+  background: #fff;
+  width: auto;
+  border: 1px solid #000;
+}
+.brand-filter .mdc-tab-scroller {
+  border-bottom: none;
+  display: block;
+}
+.brand-filter .mdc-tab-scroller__scroll-content {
+  display: block;
 }
 
 /*# sourceMappingURL=index.css.map*/

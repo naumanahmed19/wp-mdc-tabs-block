@@ -8,7 +8,8 @@
   "icon": "layout",
   "description": "Example static block scaffolded with Create Block tool.",
   "supports": {
-    "html": false
+    "html": false,
+    "multiple": false
   },
   "textdomain": "mdc-tabs",
   "editorScript": "file:./index.js",
@@ -26,10 +27,17 @@
     }
   ],
   "attributes": {
+    "recordId": {
+      "type": "number"
+    },
     "content": {
       "type": "string",
       "source": "html",
       "selector": "div"
+    },
+    "filterStyle": {
+      "type": "boolean",
+      "default": false
     },
     "tabs": {
       "type": "array",
@@ -38,6 +46,17 @@
     "style": {
       "type": "string",
       "default": "none"
+    },
+    "align": {
+      "type": "string",
+      "default": "center"
+    },
+    "activeTab": {
+      "type": "object",
+      "default": null
     }
+  },
+  "providesContext": {
+    "my-plugin/recordId": "recordId"
   }
 }

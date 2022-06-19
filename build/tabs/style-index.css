@@ -597,6 +597,16 @@
  *
  * Replace them with your own styles or remove the file completely.
  */
+.tab-wrap {
+  position: relative;
+}
+.tab-wrap .filter-btn {
+  position: absolute;
+  right: 28px;
+  top: -33px;
+  z-index: 9999;
+}
+
 .brand-tab-screen {
   display: none;
 }

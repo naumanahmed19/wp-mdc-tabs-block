@@ -5310,19 +5310,27 @@ const ALLOWED_BLOCKS = wp.blocks.getBlockTypes().map(block => block.name).filter
  * @return {WPElement} Element to render.
  */
 
-function Edit(_ref) {
-  let {
-    attributes: {
-      tabs = [],
-      templates = []
-    },
-    setAttributes,
+function Edit(props) {
+  const {
     className,
-    clientId
-  } = _ref;
+    attributes,
+    setAttributes,
+    clientId,
+    context
+  } = props;
+  const {
+    tabs = [],
+    templates = [],
+    filterStyle,
+    recordId
+  } = attributes;
   const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_4__.useBlockProps)();
   const [tabCounter, setTabCounter] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(0);
   const [activeTabIndex, setActiveTabIndex] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(0);
+  const [payload, setPayload] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)({
+    value1: "dummy",
+    value9: "dummy1"
+  });
   const {
     replaceInnerBlocks
   } = useDispatch("core/block-editor");
@@ -5339,13 +5347,14 @@ function Edit(_ref) {
   const handleAddTab = () => {
     setTabCounter(tabCounter => tabCounter + 1);
     let tabId = `tab${tabCounter}`;
+    let newTabs = [...tabs, {
+      tabId,
+      index: tabs.length,
+      title: `Tab ${tabs.length} title`,
+      description: ''
+    }];
     setAttributes({
-      tabs: [...tabs, {
-        tabId,
-        index: tabs.length,
-        title: `Tab ${tabs.length} title`,
-        description: ''
-      }]
+      tabs: newTabs
     });
     let attr = {
       'tabScreenIndex': tabs.length,
@@ -5354,7 +5363,7 @@ function Edit(_ref) {
       className: 'brand-tab-screen'
     };
     let blocks = [...inner_blocks, ...[createBlock('brand/tab', attr)]];
-    setActiveTab(tabs.length, blocks);
+    setActiveTab(tabs.length, blocks, newTabs);
   };
   /**
    *  Set active tab
@@ -5366,6 +5375,7 @@ function Edit(_ref) {
 
   const setActiveTab = function (tabIndex) {
     let blocks = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [...inner_blocks];
+    let newTabs = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : tabs;
     setActiveTabIndex(tabIndex); //Scroll tab bar
 
     let tab = new _material_tab_bar__WEBPACK_IMPORTED_MODULE_7__.MDCTabBar(document.querySelector('.mdc-tab-bar'));
@@ -5385,6 +5395,13 @@ function Edit(_ref) {
       return block;
     });
     replaceInnerBlocks(clientId, inner_blocks_new, false);
+    console.log('updateing.. ', tabIndex);
+    setTimeout(() => {
+      console.log(newTabs[tabIndex]);
+      setAttributes({
+        activeTab: newTabs[tabIndex]
+      });
+    }, 100);
   };
   /**
    * Action to remove a tab
@@ -5393,13 +5410,6 @@ function Edit(_ref) {
 
 
   const handleRemoveTab = tab => {
-    const newTemplates = templates.filter(item => item[1].index != tab.index).map(i => {
-      if (i[1].index > tab.index) {
-        i[1].index -= 1;
-      }
-
-      return i;
-    });
     const newTabs = tabs.filter(item => item.index != tab.index).map(i => {
       if (i.index > tab.index) {
         i.index -= 1;
@@ -5413,8 +5423,7 @@ function Edit(_ref) {
      */
 
     setAttributes({
-      tabs: newTabs,
-      templates: newTemplates
+      tabs: newTabs
     });
     /**
      * By default wordpress does not allow to update InnerBock compoment with new changes
@@ -5423,7 +5432,7 @@ function Edit(_ref) {
      * 
      */
 
-    let blocks = [...inner_blocks];
+    let blocks = inner_blocks;
     blocks.splice(tab.index, 1);
     /**
      * Set active tab and update blocks
@@ -5431,7 +5440,7 @@ function Edit(_ref) {
      */
 
     const previousTabIndex = tab.index == 0 ? 0 : tab.index - 1;
-    setActiveTab(previousTabIndex, blocks);
+    setActiveTab(previousTabIndex, blocks, newTabs);
   };
 
   const tabBar = value => {
@@ -5487,14 +5496,31 @@ function Edit(_ref) {
 
     if (tabs.length == 0) {
       handleAddTab();
+    } else {
+      setTimeout(() => {
+        setAttributes({
+          activeTab: tabs[0]
+        });
+      }, 100);
     }
   }, []);
+  let newTabValue = '';
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", (0,_babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, blockProps, {
     className: "tab-wrap"
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_4__.InspectorControls, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.PanelBody, {
+    title: "Settings",
+    initialOpen: true
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.ToggleControl, {
+    label: "Tabbar filter style?",
+    help: "Change thestyle of tabbar",
+    checked: filterStyle,
+    onChange: () => setAttributes({
+      filterStyle: !filterStyle
+    })
+  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
     className: className
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
-    className: "mdc-tab-bar",
+    className: filterStyle ? 'mdc-tab-bar brand-filter' : 'mdc-tab-bar',
     role: "tablist"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
     className: "mdc-tab-scroller"
@@ -5809,7 +5835,7 @@ function _extends() {
   \*****************************/
 /***/ (function(module) {
 
-module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":2,"name":"mdc/tabs","version":"0.1.0","title":"Tabs","category":"design","icon":"layout","description":"Example static block scaffolded with Create Block tool.","supports":{"html":false},"textdomain":"mdc-tabs","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","styles":[{"name":"default","label":"Default","isDefault":true},{"name":"other","label":"Other"}],"attributes":{"content":{"type":"string","source":"html","selector":"div"},"tabs":{"type":"array","selector":"div"},"style":{"type":"string","default":"none"}}}');
+module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":2,"name":"mdc/tabs","version":"0.1.0","title":"Tabs","category":"design","icon":"layout","description":"Example static block scaffolded with Create Block tool.","supports":{"html":false,"multiple":false},"textdomain":"mdc-tabs","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","styles":[{"name":"default","label":"Default","isDefault":true},{"name":"other","label":"Other"}],"attributes":{"recordId":{"type":"number"},"content":{"type":"string","source":"html","selector":"div"},"filterStyle":{"type":"boolean","default":false},"tabs":{"type":"array","selector":"div"},"style":{"type":"string","default":"none"},"align":{"type":"string","default":"center"},"activeTab":{"type":"object","default":null}},"providesContext":{"my-plugin/recordId":"recordId"}}');
 
 /***/ })
 
