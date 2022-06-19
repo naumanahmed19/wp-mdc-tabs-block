@@ -16,6 +16,22 @@
  @use "@material/tab/mdc-tab";
 
 
+
+ .tab-wrap{
+	position: relative;
+	
+
+	
+	.filter-btn{
+		position: absolute;
+		right: 28px;
+		top: -33px;
+		z-index: 9999;
+	}
+ }
+
+
+
  .brand-tab-screen {
 	display: none;
   }
@@ -23,3 +39,5 @@
   .brand-tab-screen--active {
 	display: block;
   }
+
+
